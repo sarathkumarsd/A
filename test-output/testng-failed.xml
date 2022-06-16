@@ -5,7 +5,7 @@
     <classes>
       <class name="com.test.OMRBranchClub">
         <methods>
-          <include name="login"/>
+          <include name="deleteAddress"/>
         </methods>
       </class> <!-- com.test.OMRBranchClub -->
     </classes>

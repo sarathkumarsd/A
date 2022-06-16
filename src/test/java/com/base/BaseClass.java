@@ -1,11 +1,13 @@
 package com.base;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
 import io.restassured.RestAssured;
+import io.restassured.http.Headers;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import io.restassured.specification.RequestSpecification;
@@ -13,7 +15,7 @@ import io.restassured.specification.RequestSpecification;
 public class BaseClass {
 
 	RequestSpecification rs;
-	Response response;
+	protected Response response;
 
 	public void addHeader(String key, String value) {
 		rs = RestAssured.given().header(key, value);
@@ -32,6 +34,10 @@ public class BaseClass {
 	}
 
 	public void addBody(String body) {
+		rs = rs.body(body);
+	}
+
+	public void addBody(Object body) {
 		rs = rs.body(body);
 	}
 
@@ -68,6 +74,16 @@ public class BaseClass {
 
 	}
 
+	public ResponseBody getBody(Object body) {
+		ResponseBody body2 = response.getBody();
+		return body2;
+
+	}
+
+	public void addHeaders(Headers header) {
+		rs = RestAssured.given().headers(header);
+	}
+
 	public String getResponseBody(Response response) {
 		String asString = getBody(response).asString();
 		return asString;
@@ -80,13 +96,18 @@ public class BaseClass {
 
 	}
 
-	public String getPropertyValue(String key) throws FileNotFoundException, IOException {
+	public static String getPropertyValue(String key) throws FileNotFoundException, IOException {
 		Properties properties = new Properties();
-		properties.load(new FileInputStream(System.getProperty("user.dir")+"\\src\\test\\resources\\config.properties"));
+		properties.load(
+				new FileInputStream(System.getProperty("user.dir") + "\\src\\test\\resources\\Config.properties"));
 		Object object = properties.get(key);
-		String name = (String) object;
-		return name;
-		
+		String value = (String) object;
+		return value;
+	}
+
+	public void formData() {
+		rs = rs.multiPart("profile_picture", new File("C:\\Users\\sarat\\Downloads\\img.jpg"));
+
 	}
 
 }
